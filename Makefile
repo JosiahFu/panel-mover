@@ -1,5 +1,5 @@
 #=============================================================================
-UUID=fullscreen-avoider@noobsai.github.com
+UUID=panel-mover@josiahfu.github.io
 SRCDIR=src
 BUILDDIR=build
 EXTENSIONDIR=~/.local/share/gnome-shell/extensions

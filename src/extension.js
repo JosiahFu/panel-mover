@@ -9,15 +9,15 @@ const Display = global.display;
 const ExtensionUtils = imports.misc.extensionUtils;
 
 class Extension {
-	get_unfullscreen_monitor() {
+	get_non_primary_monitor() {
 		for (const monitor of LM.monitors) {
-			if (!monitor.inFullscreen) {
+			if (monitor != LM.primaryMonitor) {
 				return monitor;
 			}
 		}
 	}
-	
-	fullscreen_changed() {
+
+/*	fullscreen_changed() {
 		if (LM.monitors.length < 2) {
 			return;
 		}
@@ -34,7 +34,7 @@ class Extension {
 			this.move_all(primary_monitor);
 		}
 	}
-	
+*/	
 	move_all(monitor) {
 		if (this._panel_monitor_index !== monitor.index) {
 			this._panel_monitor_index = monitor.index;
@@ -136,17 +136,19 @@ class Extension {
 		this._original_getDraggableWindowForPosition = Main.panel._getDraggableWindowForPosition;
 		this._settings = ExtensionUtils.getSettings();
 		this._panel_monitor_index = LM.primaryIndex;
-		this._on_fullscreen = Display.connect('in-fullscreen-changed', this.fullscreen_changed.bind(this));
+		// this._on_fullscreen = Display.connect('in-fullscreen-changed', this.fullscreen_changed.bind(this));
 		this.create_notifications_constraint(LM.primaryMonitor);
 		this.patch_updateState();
 		this.patch_getDraggableWindowForPosition();
+		this.move_all(this.get_non_primary_monitor());
 	}
 	
 	disable() {
-		Display.disconnect(this._on_fullscreen);
+		this.move_all(LM.primaryMonitor);
+		// Display.disconnect(this._on_fullscreen);
 		MT._updateState = this._original_updateState;
 		Main.panel._getDraggableWindowForPosition = this._original_getDraggableWindowForPosition;
-		delete MT._constraint;
+		// delete MT._constraint;
 		this._settings.run_dispose();
 	}
 }
