@@ -155,6 +155,5 @@ class Extension {
 
 function init() {
 	ExtensionUtils.initTranslations();
-        enable();
 	return new Extension();
 }
